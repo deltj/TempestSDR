@@ -1,0 +1,7 @@
+This is a plugin that supports the Airspy
+In order to compile it, you need to have libairspy-dev installed and the corresponding boost libraries.
+
+Compile it with
+
+    make all
+	
