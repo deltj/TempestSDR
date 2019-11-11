@@ -42,10 +42,10 @@ bladerf* device = NULL;
 bladerf_devinfo dev_info;
 bladerf_channel channel = BLADERF_CHANNEL_RX(0);
 struct bladerf_stream* rx_stream;
-const size_t num_buffers = 24;
+const size_t num_buffers = 256;
 int buffer_index = 0;
 const size_t samples_per_buffer = 8192;
-const size_t num_transfers = 8;
+const size_t num_transfers = 32;
 pthread_t rx_thread;
 void **buffers;
 tsdrplugin_readasync_function tsdrplugin_callback;
@@ -86,7 +86,8 @@ void * stream_cb(struct bladerf *dev,
                  size_t num_samples,
                  void* user_data)
 {
-    static float floatbuf[samples_per_buffer];
+    static float floatbuf[samples_per_buffer * 2];
+    static int16_t *data;
 
     if(!running)
     {
@@ -100,18 +101,20 @@ void * stream_cb(struct bladerf *dev,
     //  See: https://nuand.com/libbladeRF-doc/v2.2.1/group___s_t_r_e_a_m_i_n_g___f_o_r_m_a_t.html
     //
     //  These samples need to be converted to floats for the TSDRPlugin API
-    for(int i=0; i<samples_per_buffer; i++)
+    for(int i=0; i<num_samples; i++)
     {
         //floatbuf[i] = 0.0;
 
-        int16_t *data = (int16_t *)buffers[buffer_index];
+        //int16_t *data = (int16_t *)buffers[buffer_index];
+        data = (int16_t *)samples;
 
         //  Scale the samples to the range -1 to 1
-        floatbuf[i] = (float)data[i] / 2048.0;
+        floatbuf[2 * i] = float(data[2 * i]) / 2048.0;
+        floatbuf[2 * i + 1] = float(data[2 * i + 1]) / 2048.0;
     }
 
     //  Call the TSDRPlugin API callback with the converted samples
-    tsdrplugin_callback(floatbuf, samples_per_buffer, tsdrplugin_ctx, 0);
+    tsdrplugin_callback(floatbuf, num_samples * 2, tsdrplugin_ctx, 0);
     
     //  This function must return the address of the next buffer for libbladerf
     //  to fill with stream data
@@ -148,6 +151,24 @@ EXTERNC TSDRPLUGIN_API int __stdcall tsdrplugin_init(const char * params)
     const unsigned int num_transfers = 8;
     const unsigned int timeout_ms    = 3500;
    
+    status = bladerf_set_sample_rate(device, channel, samp_rate, NULL);
+    if(status != 0)
+    {
+        fprintf(stderr, "Failed to set sample rate to %u Hz: %s\n",
+                samp_rate, bladerf_strerror(status));
+		RETURN_EXCEPTION("bladerf_set_sample_rate() failed", TSDR_CANNOT_OPEN_DEVICE);
+    }
+
+    unsigned int bandwidth = 10e6;
+    status = bladerf_set_bandwidth(device, channel, bandwidth, NULL);
+    if(status != 0)
+    {
+        fprintf(stderr, "Failed to set bandwidth = %u: %s\n", bandwidth,
+                bladerf_strerror(status));
+		RETURN_EXCEPTION("bladerf_set_bandwidth() failed", TSDR_CANNOT_OPEN_DEVICE);
+    }
+
+    /*
     status = bladerf_sync_config(device,
             BLADERF_RX_X1,
             BLADERF_FORMAT_SC16_Q11,
@@ -162,6 +183,7 @@ EXTERNC TSDRPLUGIN_API int __stdcall tsdrplugin_init(const char * params)
         bladerf_close(device);
         RETURN_EXCEPTION("bladerf_sync_config() failed", TSDR_CANNOT_OPEN_DEVICE);
     }
+    */
 
     status = bladerf_enable_module(device, BLADERF_RX_X1, true);
     if(status != 0)
@@ -307,6 +329,8 @@ EXTERNC TSDRPLUGIN_API void __stdcall tsdrplugin_cleanup(void)
 
     //  Tell the stream thread to exit
     running = 0;
+
+    bladerf_deinit_stream(rx_stream);
 
     bladerf_close(device);
 }
