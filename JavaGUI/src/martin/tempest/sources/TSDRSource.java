@@ -40,6 +40,7 @@ public class TSDRSource {
 		new TSDRMiricsSource(),
 		new TSDRUHDSource(),
 		new TSDRlibrtlsdrSource(),
+		new TSDRAirspySource(),
 		new TSDRHackRFSource(),
         new TSDRBladeRFSource(),
 		new TSDRExtIOSource(),

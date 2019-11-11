@@ -117,6 +117,37 @@ You need to have MinGW installed and gcc and make commands need to be in your pa
 
 ### Linux
 
-To be announced soon.
+#### Ubuntu LTS 18.04.1 LTS Bionic Beaver 
+- End of Life Date: April 2023
+- ubuntu-18.04.1-desktop-amd64.iso
+- https://www.ubuntu.com/
 
+##### Update, Upgrade Ubuntu
+```
+sudo apt update
+sudo apt upgrade
+sudo apt dist-upgrade
+```
 
+##### Install tools, compilers and libraries
+```
+sudo apt install vim aptitude git
+sudo apt install openjdk-8-jdk
+sudo apt install make gcc g++
+sudo apt install libuhd-dev libhackrf-dev librtlsdr-dev libairspy-dev
+```
+
+##### Clone git and build
+```
+mkdir ~/development
+cd ~/development
+git clone https://github.com/tanpc/TempestSDR.git
+cd TempestSDR/
+make clean
+make all JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+```
+
+##### Run Application
+```
+java -jar ~/development/TempestSDR/JavaGUI/JTempestSDR.jar 
+```
