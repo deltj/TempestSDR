@@ -1,3 +1,8 @@
+This fork adds support for the Blade RF.  You will need to install libbladerf for your operating system to compile the BladeRF TSDR plugin.
+
+See the original README.md contents below.
+
+
 TempestSDR
 =============
 
