@@ -21,14 +21,20 @@ else
 	endif
 endif
 
-# Make all
-all :
+default : all
+
+plugins :
 	@$(MAKE) -C TSDRPlugin_RawFile/ all JAVA_HOME=$(JAVA_HOME)
 ifeq ($(OSNAME),WINDOWS)
 	@$(MAKE) -C TSDRPlugin_Mirics/ all MIRICS_HOME=$(MIRICS_HOME)
 	@$(MAKE) -C TSDRPlugin_ExtIO/ all MIRICS_HOME=$(MIRICS_HOME)
 endif
+
+tempestsdr : plugins
 	@$(MAKE) -C TempestSDR/ all
+
+# Make all
+all : tempestsdr
 	@$(MAKE) -C JavaGUI/ all
 
 # Clean artifacts
