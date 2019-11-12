@@ -13,7 +13,7 @@
 
 #include <jni.h>
 #include <stdio.h>
-#include "TSDRLibraryNDK.h"
+#include "martin_tempest_core_TSDRLibrary.h"
 #include "include/TSDRLibrary.h"
 #include "include/TSDRCodes.h"
 #include <stdint.h>
