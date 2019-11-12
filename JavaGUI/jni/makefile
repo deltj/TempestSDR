@@ -146,5 +146,5 @@ TSDRLibraryNDK.h : ../bin/martin/tempest/core/TSDRLibrary.class
 
 # Remove any compiled artifacts
 clean :
-	rm -f TSDRLibraryNDK.h
+	rm -f martin_tempest_core_TSDRLibrary.h
 	rm -rf $(OBJFOLDER)/
