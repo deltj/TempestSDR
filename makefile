@@ -30,11 +30,11 @@ ifeq ($(OSNAME),WINDOWS)
 	@$(MAKE) -C TSDRPlugin_ExtIO/ all MIRICS_HOME=$(MIRICS_HOME)
 endif
 
-tempestsdr : plugins
+tempestsdr :
 	@$(MAKE) -C TempestSDR/ all
 
 # Make all
-all : tempestsdr
+all : plugins tempestsdr
 	@$(MAKE) -C JavaGUI/ all
 
 # Clean artifacts

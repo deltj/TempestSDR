@@ -127,10 +127,10 @@ debugjnilib : jnilib
 
 # When compiling from command line with all
 # make sure we compile both jni and java files
-all : jnilib jar
+all : jar
 
 # Package compiled files into a runnable jar
-jar : java
+jar : java jnilib
 	jar cvfe JTempestSDR.jar martin.tempest.gui.Main lib -C bin .
 
 # The compilation of the java classes from command line
