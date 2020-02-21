@@ -96,6 +96,8 @@ uint32_t req_freq = 105e6;
 // Does the GUI allows specifying the rate?
 uint32_t sample_rate_val = 10000000;
 uint32_t req_rate = 10e6;
+uint32_t sample_rate_mini = 6000000;
+uint32_t req_rate_mini = 6e6;
 
 
 float req_gain = 1;
@@ -229,11 +231,14 @@ EXTERNC TSDRPLUGIN_API int __stdcall tsdrplugin_init(const char * params) {
 	//airspy_get_samplerates(device, &count, 0);
 	//supported_samplerates = (uint32_t *) malloc(count * sizeof(uint32_t));
 	//airspy_get_samplerates(device, supported_samplerates, count);
-	
+
 	result = airspy_set_samplerate(device, sample_rate_val);
 	if (result != AIRSPY_SUCCESS) {
-		free(argv);
-		RETURN_EXCEPTION("airspy_set_samplerate() failed", TSDR_CANNOT_OPEN_DEVICE);
+		result = airspy_set_samplerate(device, sample_rate_mini);
+		if (result != AIRSPY_SUCCESS) {
+			free(argv);
+			RETURN_EXCEPTION("airspy_set_samplerate() failed", TSDR_CANNOT_OPEN_DEVICE);
+		}
 	}
 
 
@@ -311,7 +316,7 @@ EXTERNC TSDRPLUGIN_API uint32_t __stdcall tsdrplugin_getsamplerate() {
 }
 
 EXTERNC TSDRPLUGIN_API int __stdcall tsdrplugin_setbasefreq(uint32_t freq) {
-	
+
 	req_freq = freq;
 
 	int result = airspy_set_freq(device, req_freq);
@@ -372,7 +377,10 @@ EXTERNC TSDRPLUGIN_API int __stdcall tsdrplugin_readasync(tsdrplugin_readasync_f
 
 	int result = airspy_set_samplerate(device, req_rate);
 	if( result != AIRSPY_SUCCESS ) {
-		RETURN_EXCEPTION("airspy_set_samplerate() failed", TSDR_CANNOT_OPEN_DEVICE);
+		int result = airspy_set_samplerate(device, req_rate_mini);
+		if( result != AIRSPY_SUCCESS ) {
+			RETURN_EXCEPTION("airspy_set_samplerate() failed", TSDR_CANNOT_OPEN_DEVICE);
+		}
 	}
 
 	result = airspy_set_vga_gain(device, vga_gain);
