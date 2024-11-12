@@ -76,6 +76,8 @@ documentation/acs-dissertation.pdf
 *.suo
 *.user
 *.sln.docstates
+*.csv
+*.png
 
 # Build results
 [Dd]ebug/
@@ -86,6 +88,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+JavaGUI/jni/martin_tempest_core_TSDRLibrary.h
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

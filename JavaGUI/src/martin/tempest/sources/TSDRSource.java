@@ -43,6 +43,7 @@ public class TSDRSource {
 		new TSDRAirspySource(),
 		new TSDRHackRFSource(),
         new TSDRBladeRFSource(),
+		new TSDRZMQSource(),
 		new TSDRExtIOSource(),
 	};
 	
