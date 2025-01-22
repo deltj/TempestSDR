@@ -30,7 +30,6 @@ make java
 
 for i in "${!CCs[@]}"; do 
 	CXX=${CCs[$i]}g++ 
-	GPP=${CCs[$i]}g++ 
 	CC=${CCs[$i]}gcc
 	AR=${CCs[$i]}ar
 	OSNAME=${OSNAMEs[$i]}
@@ -40,7 +39,7 @@ for i in "${!CCs[@]}"; do
 	
 	echo ------ BUILDING FOR $OSNAME/$ARCHNAME >&2
 
-	make jnilib CC=$CC CXX=$CXX GPP=$GPP AR=$AR OSNAME=$OSNAME ARCHNAME=$ARCHNAME JAVA_HOME=$JAVA_HOME MIRICS_HOME=$MIRICS_HOME LDFLAGS=-L$THIRD_PARTY_FULL_PATH UHD_HOME=$UHD_HOME
+	make jnilib CC=$CC CXX=$CXX AR=$AR OSNAME=$OSNAME ARCHNAME=$ARCHNAME JAVA_HOME=$JAVA_HOME MIRICS_HOME=$MIRICS_HOME LDFLAGS=-L$THIRD_PARTY_FULL_PATH UHD_HOME=$UHD_HOME
 
 	#do release of dlls
 	mkdir -p Release/dlls/$OSNAME/$ARCHNAME/

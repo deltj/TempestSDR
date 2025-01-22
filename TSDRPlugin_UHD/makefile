@@ -28,7 +28,7 @@ endif
 # END OF CONFIGURATION IF STANDARD DIR STRUCTURE IS USED
 
 # Compile with g++
-GPP?=g++
+CXX?=g++
 
 # Where the TSDRPlugin.h of the TempestSDR library resides (so it will be copied over)
 HEADLOCATION=../TempestSDR/src/include/
@@ -143,14 +143,14 @@ else ifeq ($(ARCHNAME),X64)
 endif
 
 else
-	$(GPP) -shared $(LDFLAGS) $(DEBUGFLAGS) $(COMPILATION_TYPE) -o $@ $(_OBJS) $(LIBRARIES)
+	$(CXX) -shared $(LDFLAGS) $(DEBUGFLAGS) $(COMPILATION_TYPE) -o $@ $(_OBJS) $(LIBRARIES)
 endif
 
 # Make dirs and compile
 $(OBJFOLDER)/%.o : $(SOURCEFOLDER)/%.cpp
 	mkdir -p $(OUTPUTFOLDER)
 	mkdir -p $(OBJFOLDER)
-	$(GPP) $(INC) $(CXXFLAGS) $(DEBUGFLAGS) $(COMPILATION_TYPE) -c $< -o $@
+	$(CXX) $(INC) $(CXXFLAGS) $(DEBUGFLAGS) $(COMPILATION_TYPE) -c $< -o $@
 
 .PHONY: clean
 
